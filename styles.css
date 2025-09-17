@@ -1,0 +1,24 @@
+/*
+Bases Template Plugin Styles
+
+This file contains custom CSS styles for the Bases Template Plugin.
+Currently, the plugin operates entirely in the background and doesn't
+require custom UI elements, but this file is included for future
+enhancements.
+*/
+
+/* Future UI styles can be added here */
+.bases-template-plugin {
+    /* Plugin-specific styles */
+}
+
+/* Notification styling (if needed) */
+.notice.bases-template-success {
+    background-color: var(--color-green);
+    color: var(--text-on-accent);
+}
+
+.notice.bases-template-error {
+    background-color: var(--color-red);
+    color: var(--text-on-accent);
+}
