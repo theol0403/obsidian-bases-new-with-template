@@ -122,6 +122,6 @@ dist/
 .vscode-test
 
 # Obsidian plugin specific
-# main.js  # Commented out - BRAT needs this file to be committed
+main.js
 *.js.map
 data.json
