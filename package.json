@@ -1,6 +1,6 @@
 {
   "name": "bases-new-with-template",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Automatically applies templates based on frontmatter links in new files",
   "main": "main.js",
   "scripts": {
