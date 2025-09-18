@@ -16,7 +16,8 @@ This plugin listens for file creation and checks for an existing `template`
 property in the frontmatter. If it finds it, it applies the template content.
 
 Works with both Core Templates and Templater plugins, and uses the appropriate
-engine to apply the template.
+engine to apply the template. Also works with multiple templates linked by the
+property.
 
 Please note:
 
