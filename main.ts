@@ -19,7 +19,7 @@ export default class BasesTemplatePlugin extends Plugin {
           if (!file.basename.startsWith("Untitled")) return;
 
           // Wait for metadata cache to be populated
-          await new Promise((resolve) => setTimeout(resolve, 100));
+          await new Promise((resolve) => setTimeout(resolve, 150));
           const fm = this.app.metadataCache.getFileCache(file)?.frontmatter;
           if (!fm) return;
 
@@ -28,11 +28,7 @@ export default class BasesTemplatePlugin extends Plugin {
           if (!value) return;
 
           const values = Array.isArray(value) ? value : [value];
-
-          // Open the file temporarily in full screen to ensure it's the active file to apply the template
-          // This is necessary until https://forum.obsidian.md/t/bases-applying-template-in-new-entry-popup-doesnt-apply-properties/105802 is solved
           const activeLeaf = this.app.workspace.getMostRecentLeaf();
-          let isFullscreen = false;
 
           for (const item of values) {
             if (typeof item !== "string") continue;
@@ -64,15 +60,17 @@ export default class BasesTemplatePlugin extends Plugin {
               templateFolder &&
               path.startsWith(templateFolder)
             ) {
-              if (!isFullscreen) {
-                await this.app.workspace.openLinkText(file.path, "", true);
-                isFullscreen = true;
+              // Open the file temporarily in full screen to ensure it's the active file to apply the template
+              // This is necessary until https://forum.obsidian.md/t/bases-applying-template-in-new-entry-popup-doesnt-apply-properties/105802 is solved
+              if (activeLeaf === this.app.workspace.getMostRecentLeaf()) {
+                await this.app.workspace.openLinkText(file.path, "", "tab");
               }
               await (
                 this.app as any
               ).internalPlugins.plugins.templates.instance.insertTemplate(
                 templateFile
               );
+              await new Promise((resolve) => setTimeout(resolve, 50));
             } else if (
               templaterEnabled &&
               templaterFolder &&
@@ -85,9 +83,10 @@ export default class BasesTemplatePlugin extends Plugin {
             }
           }
 
-          // go back to the previous file
-          if (isFullscreen && activeLeaf) {
-            this.app.workspace.setActiveLeaf(activeLeaf);
+          // if a new leaf was created, return to the original leaf and detach the new leaf
+          const newLeaf = this.app.workspace.getMostRecentLeaf();
+          if (activeLeaf && newLeaf && activeLeaf !== newLeaf) {
+            newLeaf.detach();
           }
         })
       );
