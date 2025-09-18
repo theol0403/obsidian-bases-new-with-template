@@ -1,7 +1,7 @@
-# Bases New with Template
+# Obsidian Bases New with Template
 
-Temporary solution to automatically apply templates when creating new entries
-with the Bases plugin.
+Obsidian plugin implementing a temporary solution to automatically apply
+templates when creating new entries with the Bases plugin.
 
 This plugin implements the behavior requested in
 [Bases: New With Template (for ‘New’ Button)](https://forum.obsidian.md/t/bases-new-with-template-for-new-button/102639).
@@ -12,28 +12,39 @@ If you create a filter in your Bases view with a `template` property linking to
 a template, Bases will create a new note with the implied
 `template: [[TemplateName]]` property in the frontmatter.
 
-This plugin listens for file creation and checks for the `template` property in
-the frontmatter. If it finds it, it applies the template content.
+This plugin listens for file creation and checks for an existing `template`
+property in the frontmatter. If it finds it, it applies the template content.
 
-Works with both Core Templates and Templater plugins.
+Works with both Core Templates and Templater plugins, and uses the appropriate
+engine to apply the template.
+
+Please note:
+
+- When using a Core Template, the plugin bypasses the new note popup window and
+  opens the note in full screen, this is to avoid
+  [this issue](https://forum.obsidian.md/t/bases-applying-template-in-new-entry-popup-doesnt-apply-properties/105802).
+- The nature of using a filter means that the base won't show items that were
+  NOT created by the New button. To mitigate this, add a
+  `template: [[TemplateName]]` self-link property to the template itself so that
+  the note shows up in the base when applying a template in the regular way.
+- The plugin only applies to new notes starting with "Untitled" (eg the note was
+  created by Bases).
 
 ## Setup
 
 ### 1. Create Templates
 
-**For Core Templates:**
+Place your template (e.g., `ProjectTemplate.md`) in
 
-- Place your template (e.g., `ProjectTemplate.md`) in Settings → Core Plugins →
-  Templates → Template folder
+- Core Templates: Settings → Core Plugins → Templates → Template folder
+- Templater: Settings → Community Plugins → Templater → Templates folder
 
-**For Templater:**
-
-- Place your template in Settings → Community Plugins → Templater → Templates
-  folder
+If both are installed and point to the same folder, the plugin will use core
+templates.
 
 ### 2. Configure Bases View with Implied Properties
 
-This plugin relies on Bases' implied properties feature to work:
+This plugin relies on the Bases implied properties feature to work:
 
 1. **Open or create a Base** (`.base` file or via Bases plugin UI)
 2. **Add a filter** with a property linking to your template:
@@ -46,20 +57,6 @@ This plugin relies on Bases' implied properties feature to work:
 1. In your Bases view, click the **"New"** button
 2. The plugin detects `template: [[ProjectTemplate]]` in the frontmatter
 3. Template content is automatically applied to the new note
-
-## Note
-
-For a Base view filtering `category: [[MeetingTemplate]]`:
-
-- If `MeetingTemplate.md` is in the Core Templates folder → uses Core Templates
-  engine
-  - Note that it currently bypasses the popup window and opens the new note in
-    full screen, this is to avoid
-    [this issue](https://forum.obsidian.md/t/bases-applying-template-in-new-entry-popup-doesnt-apply-properties/105802)
-- If it's in the Templater folder → uses Templater engine
-
-Note that this only applies to new notes starting with "Untitled" -> the note
-was created by Bases.
 
 ## Installation
 
