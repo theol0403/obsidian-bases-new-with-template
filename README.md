@@ -1,183 +1,87 @@
-# Bases Template Plugin
+# Bases New with Template
 
-An Obsidian plugin that automatically applies templates based on frontmatter
-links in newly created files.
+Temporary solution to automatically apply templates when creating new entries
+with the Bases plugin.
 
-## Features
+This plugin implements the behavior requested in
+[Bases: New With Template (for ‘New’ Button)](https://forum.obsidian.md/t/bases-new-with-template-for-new-button/102639).
 
-- **Automatic Template Application**: When you create a new file with a template
-  link in the frontmatter (e.g., `template: [[My Template]]`), the plugin
-  automatically applies that template
-- **Dual Engine Support**: Works with both Obsidian's core Templates plugin and
-  the Templater community plugin
-- **Smart Detection**: Automatically determines which templating engine to use
-  based on the template file's location
-- **Error Handling**: Provides clear notifications when templates are not found
-  or when errors occur
+## What It Does
 
-## How It Works
+If you create a filter in your Bases view with a `template` property linking to
+a template, Bases will create a new note with the implied
+`template: [[TemplateName]]` property in the frontmatter.
 
-1. **File Creation**: When you create a new file in Obsidian
-2. **Frontmatter Scanning**: The plugin scans the file's frontmatter for
-   template links in the format `[[Template Name]]`
-3. **Template Location**: It locates the referenced template file
-4. **Engine Detection**: Determines whether to use Core Templates or Templater
-   based on the template's folder location
-5. **Template Application**: Applies the template using the appropriate engine
+This plugin listens for file creation and checks for the `template` property in
+the frontmatter. If it finds it, it applies the template content.
+
+Works with both Core Templates and Templater plugins.
+
+## Setup
+
+### 1. Create Templates
+
+**For Core Templates:**
+
+- Place your template (e.g., `ProjectTemplate.md`) in Settings → Core Plugins →
+  Templates → Template folder
+
+**For Templater:**
+
+- Place your template in Settings → Community Plugins → Templater → Templates
+  folder
+
+### 2. Configure Bases View with Implied Properties
+
+This plugin relies on Bases' implied properties feature to work:
+
+1. **Open or create a Base** (`.base` file or via Bases plugin UI)
+2. **Add a filter** with a property linking to your template:
+   ![Filter Example](<CleanShot 2025-09-17 at 19.21.40.png>)
+3. **New notes created** via the "New" button will include
+   `template: [[ProjectTemplate]]` in their frontmatter
+
+### 3. Create Notes
+
+1. In your Bases view, click the **"New"** button
+2. The plugin detects `template: [[ProjectTemplate]]` in the frontmatter
+3. Template content is automatically applied to the new note
+
+## Note
+
+For a Base view filtering `category: [[MeetingTemplate]]`:
+
+- If `MeetingTemplate.md` is in the Core Templates folder → uses Core Templates
+  engine
+  - Note that it currently bypasses the popup window and opens the new note in
+    full screen, this is to avoid
+    [this issue](https://forum.obsidian.md/t/bases-applying-template-in-new-entry-popup-doesnt-apply-properties/105802)
+- If it's in the Templater folder → uses Templater engine
+
+Note that this only applies to new notes starting with "Untitled" -> the note
+was created by Bases.
 
 ## Installation
 
+### Using BRAT (Recommended)
+
+1. Install the [BRAT plugin](https://github.com/TfTHacker/obsidian42-brat)
+2. Open BRAT settings in Obsidian
+3. Click "Add Beta Plugin"
+4. Enter: `theol0403/obsidian-bases-new-with-template`
+5. Enable the plugin in Settings → Community Plugins
+
 ### Manual Installation
 
-1. Download the latest release from the releases page
-2. Extract the files to your vault's plugins folder:
-   `VaultFolder/.obsidian/plugins/bases-template-plugin/`
-3. Reload Obsidian
-4. Enable the plugin in Settings → Community Plugins
+1. Download the latest release from
+   [GitHub releases](https://github.com/theol0403/obsidian-bases-new-with-template/releases)
+2. Extract to `VaultFolder/.obsidian/plugins/bases-new-with-template/`
+3. Enable in Settings → Community Plugins
 
-### Development Installation
-
-1. Clone this repository into your vault's plugins folder
-2. Navigate to the plugin directory
-3. Run `npm install` to install dependencies
-4. Run `npm run dev` to start development mode with hot reloading
-5. Enable the plugin in Obsidian
-
-## Usage
-
-### Basic Usage
-
-Create a new file with frontmatter containing a template link:
-
-```markdown
----
-template: [[Daily Note Template]]
-title: My New Note
----
-
-# Content will be replaced by template
-```
-
-When you save this file, the plugin will automatically apply the "Daily Note
-Template" and replace the content.
-
-### Supported Frontmatter Formats
-
-The plugin looks for template links in any frontmatter field:
-
-```yaml
----
-template: [[My Template]]
----
-```
-
-```yaml
----
-type: [[Project Template]]
----
-```
-
-```yaml
----
-base: [[Meeting Template]]
-category: work
----
-```
-
-### Template Engine Requirements
-
-#### Core Templates Plugin
-
-- Template files must be located in the folder specified in Templates plugin
-  settings
-- Templates will be processed using Obsidian's built-in template variables
-
-#### Templater Plugin
-
-- Template files must be located in the folder specified in Templater plugin
-  settings
-- Templates will be processed with full Templater functionality including custom
-  scripts
-
-## Configuration
-
-The plugin works automatically with your existing template plugin
-configurations:
-
-1. **Core Templates**: Set up your template folder in Settings → Core Plugins →
-   Templates
-2. **Templater**: Configure your template folder in Settings → Community Plugins
-   → Templater
-
-## Development
-
-### Building
+### Development
 
 ```bash
-# Install dependencies
 npm install
-
-# Development build with watching
-npm run dev
-
-# Production build
 npm run build
-
-# Version bump (updates manifest.json and versions.json)
-npm run version
+npm run dev
 ```
-
-### Project Structure
-
-```
-├── main.ts              # Main plugin class
-├── templater.ts          # Templater integration utilities
-├── manifest.json         # Plugin manifest
-├── package.json          # Node.js dependencies and scripts
-├── tsconfig.json         # TypeScript configuration
-├── esbuild.config.mjs    # Build configuration
-└── version-bump.mjs      # Version management script
-```
-
-### Code Architecture
-
-- **BasesTemplatePlugin**: Main plugin class that handles file creation events
-- **processTemplate**: Utility function for processing Templater templates
-- **Event-driven**: Uses Obsidian's vault events to trigger template processing
-- **Error Handling**: Comprehensive error handling with user notifications
-
-## Troubleshooting
-
-### Template Not Applied
-
-- Ensure the template file exists and the link is correct
-- Check that the template is in the correct folder for your templating plugin
-- Verify that either Core Templates or Templater plugin is enabled
-
-### Templater Issues
-
-- Make sure Templater plugin is installed and enabled
-- Check that template files are in the Templater templates folder
-- Review console for detailed error messages
-
-### Core Templates Issues
-
-- Ensure Core Templates plugin is enabled
-- Verify template files are in the Templates folder
-- Check template folder path in plugin settings
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes with appropriate tests
-4. Submit a pull request
-
-## License
-
-MIT License - see LICENSE file for details.
-
-## Support
-
-If you encounter issues or have feature requests, please create an issue on the
-GitHub repository.

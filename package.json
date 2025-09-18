@@ -1,5 +1,5 @@
 {
-  "name": "obsidian-bases-template-plugin",
+  "name": "bases-new-with-template",
   "version": "1.0.0",
   "description": "Automatically applies templates based on frontmatter links in new files",
   "main": "main.js",
@@ -15,7 +15,7 @@
     "automation",
     "frontmatter"
   ],
-  "author": "Your Name",
+  "author": "Theo Lemay",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^16.11.6",
