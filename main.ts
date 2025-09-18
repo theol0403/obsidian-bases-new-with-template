@@ -29,6 +29,11 @@ export default class BasesTemplatePlugin extends Plugin {
 
           const values = Array.isArray(value) ? value : [value];
 
+          // Open the file temporarily in full screen to ensure it's the active file to apply the template
+          // This is necessary until https://forum.obsidian.md/t/bases-applying-template-in-new-entry-popup-doesnt-apply-properties/105802 is solved
+          const activeLeaf = this.app.workspace.getMostRecentLeaf();
+          let isFullscreen = false;
+
           for (const item of values) {
             if (typeof item !== "string") continue;
 
@@ -59,19 +64,15 @@ export default class BasesTemplatePlugin extends Plugin {
               templateFolder &&
               path.startsWith(templateFolder)
             ) {
-              // Open the file temporarily to ensure it's the active file to apply the template
-              // This is necessary until https://forum.obsidian.md/t/bases-applying-template-in-new-entry-popup-doesnt-apply-properties/105802 is solved
-              await this.app.workspace.openLinkText(file.path, "", true);
-              const activeLeaf = this.app.workspace.getMostRecentLeaf();
+              if (!isFullscreen) {
+                await this.app.workspace.openLinkText(file.path, "", true);
+                isFullscreen = true;
+              }
               await (
                 this.app as any
               ).internalPlugins.plugins.templates.instance.insertTemplate(
                 templateFile
               );
-              // go back to the previous file
-              if (activeLeaf) {
-                this.app.workspace.setActiveLeaf(activeLeaf);
-              }
             } else if (
               templaterEnabled &&
               templaterFolder &&
@@ -82,6 +83,11 @@ export default class BasesTemplatePlugin extends Plugin {
                 await this.app.vault.modify(file, processed);
               }
             }
+          }
+
+          // go back to the previous file
+          if (isFullscreen && activeLeaf) {
+            this.app.workspace.setActiveLeaf(activeLeaf);
           }
         })
       );
