@@ -21,13 +21,13 @@ property.
 
 Please note:
 
-- When using a Core Template, the plugin bypasses the new note popup window and
-  opens the note in full screen, this is to avoid
-  [this issue](https://forum.obsidian.md/t/bases-applying-template-in-new-entry-popup-doesnt-apply-properties/105802).
 - The nature of using a filter means that the base won't show items that were
   NOT created by the New button. To mitigate this, add a
   `template: [[TemplateName]]` self-link property to the template itself so that
   the note shows up in the base when applying a template in the regular way.
+- When using a Core Template, the plugin bypasses the new note popup window and
+  temporarily opens the note in full screen, this is to avoid
+  [this issue](https://forum.obsidian.md/t/bases-applying-template-in-new-entry-popup-doesnt-apply-properties/105802).
 - The plugin only applies to new notes starting with "Untitled" (eg the note was
   created by Bases).
 
