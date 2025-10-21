@@ -63,14 +63,14 @@ export default class BasesTemplatePlugin extends Plugin {
               // Open the file temporarily in full screen to ensure it's the active file to apply the template
               // This is necessary until https://forum.obsidian.md/t/bases-applying-template-in-new-entry-popup-doesnt-apply-properties/105802 is solved
               if (activeLeaf === this.app.workspace.getMostRecentLeaf()) {
-                await this.app.workspace.openLinkText(file.path, "", "tab");
+                await this.app.workspace.openLinkText(file.path, "", false);
               }
               await (
                 this.app as any
               ).internalPlugins.plugins.templates.instance.insertTemplate(
                 templateFile
               );
-              await new Promise((resolve) => setTimeout(resolve, 50));
+              await new Promise((resolve) => setTimeout(resolve, 100));
             } else if (
               templaterEnabled &&
               templaterFolder &&

@@ -1,7 +1,7 @@
 {
   "id": "bases-new-with-template",
   "name": "Bases New with Template",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "minAppVersion": "0.15.0",
   "description": "Automatically applies templates when creating new entries with Bases plugin. When you create a note with template links in frontmatter (e.g., template: [[My Template]]), the template is automatically applied using either Core Templates or Templater plugins.",
   "author": "Theo Lemay",
