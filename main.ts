@@ -79,7 +79,7 @@ export default class BasesTemplatePlugin extends Plugin {
         // Quote strings if they contain special YAML characters
         const needsQuoting = /[:#\[\]{}|>*&!%@`]/.test(value) || value.includes("\n");
         if (needsQuoting) {
-          const escaped = value.replace(/"/g, '\\"');
+          const escaped = value.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
           newFrontmatterLines.push(`${key}: "${escaped}"`);
         } else {
           newFrontmatterLines.push(`${key}: ${value}`);
@@ -91,7 +91,7 @@ export default class BasesTemplatePlugin extends Plugin {
           // Quote array items if they contain special YAML characters
           const needsQuoting = /[:#\[\]{}|>*&!%@`]/.test(itemStr) || itemStr.includes("\n");
           if (needsQuoting) {
-            const escaped = itemStr.replace(/"/g, '\\"');
+            const escaped = itemStr.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
             newFrontmatterLines.push(`  - "${escaped}"`);
           } else {
             newFrontmatterLines.push(`  - ${itemStr}`);
