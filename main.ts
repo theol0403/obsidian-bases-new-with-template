@@ -55,11 +55,19 @@ export default class BasesTemplatePlugin extends Plugin {
               "templater-obsidian"
             ]?.settings?.templates_folder?.toLowerCase();
 
-            if (
+            // Determine which plugin to use
+            // If both plugins are enabled and use the same folder, prioritize Core Templates
+            const useCoreTemplates =
               templatesEnabled &&
               templateFolder &&
-              path.startsWith(templateFolder)
-            ) {
+              path.startsWith(templateFolder);
+            const useTemplater =
+              !useCoreTemplates &&
+              templaterEnabled &&
+              templaterFolder &&
+              path.startsWith(templaterFolder);
+
+            if (useCoreTemplates) {
               // Open the file temporarily in full screen to ensure it's the active file to apply the template
               // This is necessary until https://forum.obsidian.md/t/bases-applying-template-in-new-entry-popup-doesnt-apply-properties/105802 is solved
               if (activeLeaf === this.app.workspace.getMostRecentLeaf()) {
@@ -71,11 +79,7 @@ export default class BasesTemplatePlugin extends Plugin {
                 templateFile
               );
               await new Promise((resolve) => setTimeout(resolve, 100));
-            } else if (
-              templaterEnabled &&
-              templaterFolder &&
-              path.startsWith(templaterFolder)
-            ) {
+            } else if (useTemplater) {
               const processed = await processTemplate(this.app, templateFile);
               if (processed) {
                 await this.app.vault.modify(file, processed);
